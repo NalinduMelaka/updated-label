@@ -1,12 +1,19 @@
 'use client'
 import { Sidebar } from '../../components/Sidebar'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MobileSidebar } from '../components/Mobile-sidebar'
 import { createstroke } from '../actions/api/createstroke'
+import { getstrokedata } from '../actions/api/getstrokedata'
 
 type Props = {}
+type Stroke = {
+  strokeno: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
+  const [strokes, setStrokes] = useState<Stroke[]>([]);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [strokeno, setStrokeno] = useState('');
   console.log('stroke is running on artwork')
@@ -21,6 +28,17 @@ const page = (props: Props) => {
    }
         
  };
+
+ useEffect(() => {
+  const fetchStroke = async () => {
+    const fetchedStrokes = await getstrokedata();
+    const sortedStroke = [...fetchedStrokes].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    setStrokes(sortedStroke);
+    console.log('useEffect is running!')
+  };
+  fetchStroke();
+},[]);
+ console.log(strokes);
 
   return (
     
@@ -43,7 +61,13 @@ const page = (props: Props) => {
     <div className=' flex flex-col border-8 border-gray-200 rounded-sm  m-1 '>
       <div className='w-full h-12 flex flex-col mt-1'>
         <div className='w-full h-6 p-0 text-sm flex flex-row sm:h-6'>
-          <div><label className='mx-2'>STROKE NO</label><select className='md:w-24 mx-2 sm:w-12'></select></div>
+          <div><label className='mx-2'>STROKE NO</label>
+          <select className='md:w-24 mx-2 sm:w-12'>
+            {strokes.map( stroke => (
+              <option key={stroke.strokeno} value={stroke.strokeno}>{stroke.strokeno}</option>
+            ))}
+          </select>
+          </div>
           <div><label>CONT.NO</label><select className='md:w-24 ml-2 sm:w-12'></select></div>
         </div>
         <div className='w-full h-6 p-0 text-sm'>
@@ -92,4 +116,4 @@ const page = (props: Props) => {
   )
 }
 
-export default page
+export default Page
