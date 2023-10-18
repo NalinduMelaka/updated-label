@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model stroke {
+  strokeno  String     @id
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  contract  contract[]
+}
+
+model contract {
+  constractno String      @id
+  season      String
+  stroke_desc String
+  prodesc     String
+  tdept       String
+  stroke      stroke      @relation(fields: [stroke_id], references: [strokeno])
+  stroke_id   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  carelabel   carelabel[]
+}
+
+model carelabel {
+  id          Int          @id @default(autoincrement())
+  ref_no      String
+  wash_symbol String
+  fibre       String
+  zoordes     String
+  mpart_fw    String
+  coo         String
+  caretext    String
+  contract    contract     @relation(fields: [contract_id], references: [constractno])
+  contract_id String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  otherlabel  otherlabel[]
+}
+
+model otherlabel {
+  id           Int       @id @default(autoincrement())
+  fef_no       String
+  label_type   String
+  carelabel    carelabel @relation(fields: [carelabel_id], references: [id])
+  carelabel_id Int
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  contity      contity[]
+}
+
+model contity {
+  id             Int        @id @default(autoincrement())
+  color_code     String
+  color_name     String
+  upc_no         String
+  primary_size   String
+  secondary_size String
+  selling_price  Float
+  order_qty      String
+  otherlabel     otherlabel @relation(fields: [otherlabel_id], references: [id])
+  otherlabel_id  Int
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
