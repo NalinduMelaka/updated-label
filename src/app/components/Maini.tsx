@@ -51,16 +51,16 @@ export default function Maini() {
           </div>
         </div>
         
-        <div className='flex  h-28 mt-2  bg-slate-200 overflow-auto'>
-            <div className='  ml-8 my-2'>{showtable1 && <Contract strokeno={strokeno} />}</div>
+        <div className='flex  h-28 border-8 bg-slate-200  border-white rounded-sm m-1 overflow-auto'>
+            <div className='  ml-8 '>{showtable1 && <Contract strokeno={strokeno} />}</div>
         </div>
-        <div className='flex bg-slate-200 h-24 mt-2  overflow-auto'>
+        <div className='flex bg-slate-200 h-24 border-8 border-white rounded-sm m-1  overflow-auto'>
            <div className=' ml-8 my-2'>{showtable1 && <Care/>}</div>
         </div>
-        <div className='flex overflow-auto h-24 mt-2 bg-slate-200'>
+        <div className='flex overflow-auto h-24 border-8 border-white rounded-sm m-1 bg-slate-200'>
              <div className='ml-8 my-2'>{showtable1 && <Other/>}</div>
         </div>
-        <div className='flex bg-slate-200 h-56 mt-2  overflow-auto'>
+        <div className='flex bg-slate-200 h-56 border-8 border-white rounded-sm m-1 overflow-auto'>
               <div className='ml-8 my-2'>{showtable1 && <Quantity/>}</div>
         </div>
 

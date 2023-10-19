@@ -42,7 +42,7 @@ export default  function Otherdata() {
     <>
     {others.map(Other => (
       <tr key={Other.id} onClick={() => handleRowClick(Other.id)}>
-        <td className='border border-black'>{Other.fef_no}</td>
+        <td className={`border border-black ${state3 === Other.id?'text-cyan-400':'' }`}>{Other.fef_no}</td>
         <td className='border border-black'>{Other.label_type}</td>
       </tr>
     ))}</>

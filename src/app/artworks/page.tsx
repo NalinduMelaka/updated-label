@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { MobileSidebar } from '../components/Mobile-sidebar'
 import { createstroke } from '../actions/api/createstroke'
 import { getstrokedata } from '../actions/api/getstrokedata'
+import { getcontract } from '../actions/api/getcontract'
 
 type Props = {}
 type Stroke = {
@@ -11,9 +12,21 @@ type Stroke = {
   createdAt: Date;
   updatedAt: Date;
 }
+type Contract = {
+  constractno: string;
+  season: string;
+  stroke_desc: string;
+  prodesc: string;
+  tdept: string;
+  stroke_id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 
 const Page = (props: Props) => {
   const [strokes, setStrokes] = useState<Stroke[]>([]);
+  const [contracts, setContracts] = useState<Contract[]>([]);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [strokeno, setStrokeno] = useState('');
   console.log('stroke is running on artwork')
@@ -33,12 +46,30 @@ const Page = (props: Props) => {
   const fetchStroke = async () => {
     const fetchedStrokes = await getstrokedata();
     const sortedStroke = [...fetchedStrokes].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    if (sortedStroke.length > 0) {
+      setStrokeno(sortedStroke[0].strokeno);
+    }
     setStrokes(sortedStroke);
     console.log('useEffect is running!')
   };
   fetchStroke();
+
 },[]);
- console.log(strokes);
+
+useEffect(() => {
+  const fetchContract = async () => {
+    const fetchedContracts = await getcontract(strokeno);
+    const sortedContracts = [...fetchedContracts].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    setContracts(sortedContracts);
+  };
+
+  if (strokeno) {
+    fetchContract();
+  }
+},[strokeno]);
+
+ console.log('stroke is',strokeno);
+ console.log(contracts);
 
   return (
     
@@ -62,13 +93,19 @@ const Page = (props: Props) => {
       <div className='w-full h-12 flex flex-col mt-1'>
         <div className='w-full h-6 p-0 text-sm flex flex-row sm:h-6'>
           <div><label className='mx-2'>STROKE NO</label>
-          <select className='md:w-24 mx-2 sm:w-12'>
+          <select className='md:w-24 mx-2 sm:w-12' onChange={(e) => setStrokeno(e.target.value)}>
             {strokes.map( stroke => (
               <option key={stroke.strokeno} value={stroke.strokeno}>{stroke.strokeno}</option>
             ))}
           </select>
           </div>
-          <div><label>CONT.NO</label><select className='md:w-24 ml-2 sm:w-12'></select></div>
+          <div><label>CONT.NO</label>
+          <select className='md:w-24 ml-2 sm:w-12' >
+            {contracts.map(contract =>(
+              <option key={contract.constractno} value={contract.constractno}>{contract.constractno}</option>
+            ))}
+          </select>
+          </div>
         </div>
         <div className='w-full h-6 p-0 text-sm'>
           <label className='mx-2'>ART NO</label><select className='md:w-80  ml-2 sm:w-48'></select>
@@ -76,7 +113,74 @@ const Page = (props: Props) => {
       </div>
       <div className='w-full h-full flex flex-col'>
         <div className='bg-sky-700 col text-white sm:h-6'><p className='ml-2'>FLM DATA</p></div>
-        <div className='flex justify-center items-center h-full text-6xl'><p>FZ</p></div>
+        <div className=' h-full grid grid-cols-2 grid-rows-3 text-xs'>
+          <div className=' flex flex-col md:w-40 md:ml-10'>
+            <div className='flex justify-between'><label>Dept.Na</label>
+            <select className='w-20 h-3 m-1'>
+              <option>T11</option>
+              <option>T14</option>
+              <option>T15</option>
+              <option>T17</option>
+              <option>T25</option>
+              <option>T28</option>
+              <option>T38</option>
+              <option>T69</option>
+              <option>T76</option>
+            </select>
+            </div>
+            <div className='flex justify-between'><label>Sup.Code</label><input className='w-20 h-3 m-1' type='text'/></div>
+            <div className='flex justify-between'><label>COO</label>
+            <select className='w-20 h-3 m-1'>
+              <option>BD</option>
+            </select>
+            </div>
+            <div  className='flex justify-between'><label>Stroke No</label><input className='w-20 h-3 m-1' type='text'/></div>
+          </div>
+          <div className='flex flex-row justify-center'>
+            <div className='md:w-44'>
+              <div className='flex justify-between'>
+                <label >P.D</label><input className='sm:w-20 w-24 m-1 h-3 '/>
+              </div>
+              <div className='flex justify-between'>
+                <label>POS</label>
+                <select className='sm:w-20 w-24 m-1 h-3'>
+                  <option>TOP</option>
+                </select>
+              </div>
+              <div className='flex justify-between'>
+                <label>Fact</label><select className='sm:w-20 w-24 m-1 h-3'></select>
+              </div>
+              <div className='flex flex-row justify-between h-3'>
+                <div><label>P.D</label><input className='w-8  h-3 m-1'/></div>
+                <div><label>R.Color</label>
+                <select className='w-8 md:w-11 h-3  m-1'>
+                  <option>WHITE</option>
+                </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className=' col-span-2 flex flex-col justify-center'>
+            <div className='md:w-5/6 md:m-auto'>
+                <div className='h-3 mb-1 flex justify-between'><label>CLCode</label><input className='h-3 w-32 md:w-72' /></div>
+                <div className='h-3 mb-1 flex justify-between'><label>CCCode</label><input className='h-3 w-32 md:w-72' /></div>
+                <div className='h-3 mb-1 flex justify-between'><label>Fiber</label><input  className='h-3 w-32 md:w-72'/></div>
+                <div className='h-3 mb-1 flex justify-between'><label>ZCODE</label><input  className='h-3 w-32 md:w-72'/></div>
+                <div className='h-3 mb-1 flex justify-between'><label>SPCode</label><input className='h-3 w-32 md:w-72' /></div>
+             </div>
+          </div>
+          <div className='flex flex-col  md:ml-10'>
+            <div className='flex justify-between h-3 my-1'><label>Contract No</label><input className='w-20' /></div>
+            <div className='flex justify-between h-3 my-1'><label>Sub Ref</label><input className='w-20'/></div>
+            <div className='flex justify-between h-3 my-1'><label>PLM NO</label><input className='w-20'/></div>
+          </div>
+          <div className='flex flex-col md:mr-11'>
+            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL REF</label><input className='w-14 h-3' /></div>
+            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL TYPE</label><input className='w-14 h-3' /></div>
+            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL WIDTH</label><input className='w-14 h-3' /></div>
+            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>SCISSOR MARK</label><input className='w-14 h-3' /></div>
+          </div>
+        </div>
       </div>
     </div>
     <div className='row-span-2 flex flex-col border-8 border-gray-200 rounded-sm m-1'>

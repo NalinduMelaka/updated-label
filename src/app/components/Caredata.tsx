@@ -48,7 +48,7 @@ export default  function Caredata() {
     <>
     {cares.map(care => (
       <tr key={care.id} onClick={() => handleRowClick(care.id)}>
-        <td className='border border-black'>{care.ref_no}</td>
+        <td className={`border border-black  ${state2 === care.id?'text-cyan-400':'' }`}>{care.ref_no}</td>
         <td className='border border-black'>{care.wash_symbol}</td>
         <td className='border border-black'>{care.fibre}</td>
         <td className='border border-black'>{care.zoordes}</td>

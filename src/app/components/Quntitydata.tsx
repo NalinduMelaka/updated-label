@@ -43,7 +43,7 @@ export default  function Quntitydata() {
     {quntitys.map(quntity => (
       <tr key={quntity.id} onClick={() => handleRowClick(quntity.id)}>
         <td className='border border-black'></td>
-        <td className='border border-black'>{quntity.color_code}</td>
+        <td className={`border border-black ${state4 === quntity.id?'text-cyan-400':'' }`}>{quntity.color_code}</td>
         <td className='border border-black'>{quntity.color_name}</td>
         <td className='border border-black'>{quntity.upc_no}</td>
         <td className='border border-black'>{quntity.primary_size}</td>

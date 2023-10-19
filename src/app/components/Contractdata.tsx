@@ -47,8 +47,8 @@ export default  function Contractdata({ strokeno }: Props) {
     <>
     {contracts.map(contract => (
       <tr key={contract.constractno} onClick={() => handleRowClick(contract.constractno)}>
-        <td className={`border border-black ${state1 === contract.constractno?'bg-cyan-100':'' }`}></td>
-        <td className='border border-black'>{contract.stroke_id}</td>
+        <td className={`border border-black `}></td>
+        <td className={`border border-black ${state1 === contract.constractno?'text-cyan-400':'' }`}>{contract.stroke_id}</td>
         <td className='border border-black'>{contract.constractno}</td>
         <td className='border border-black'>{contract.season}</td>
         <td className='border border-black'>{contract.tdept}</td>
