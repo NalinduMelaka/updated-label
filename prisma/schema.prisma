@@ -28,6 +28,7 @@ model contract {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   carelabel   carelabel[]
+  art         art[]
 }
 
 model carelabel {
@@ -75,4 +76,12 @@ model contity {
 model image {
   id   Int   @id @default(autoincrement())
   data Bytes
+}
+
+model art {
+  id          String   @id
+  contract    contract @relation(fields: [contract_id], references: [constractno])
+  contract_id String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

@@ -5,6 +5,8 @@ import { MobileSidebar } from '../components/Mobile-sidebar'
 import { createstroke } from '../actions/api/createstroke'
 import { getstrokedata } from '../actions/api/getstrokedata'
 import { getcontract } from '../actions/api/getcontract'
+import Showimg from '../components/Showimg'
+import { getart } from '../actions/api/getart'
 
 type Props = {}
 type Stroke = {
@@ -24,11 +26,23 @@ type Contract = {
 }
 
 
+type Art = {
+ id: string;
+ contract_id: string;
+ createdAt: Date;
+ updatedAt: Date;
+}
+
+
 const Page = (props: Props) => {
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [contracts, setContracts] = useState<Contract[]>([]);
+  const [ artnoms ,setArtnoms] = useState<Art[]>([]);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [strokeno, setStrokeno] = useState('');
+  const [contactno, setContractno] = useState('');
+  const [show, setShow] = useState(false);
+  const [artno, setArtno] = useState();
   console.log('stroke is running on artwork')
 
   const handleInputChange = async () => {
@@ -60,6 +74,9 @@ useEffect(() => {
   const fetchContract = async () => {
     const fetchedContracts = await getcontract(strokeno);
     const sortedContracts = [...fetchedContracts].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    if(sortedContracts.length > 0){
+      setContractno(sortedContracts[0].constractno);
+    }
     setContracts(sortedContracts);
   };
 
@@ -68,8 +85,19 @@ useEffect(() => {
   }
 },[strokeno]);
 
- console.log('stroke is',strokeno);
- console.log(contracts);
+useEffect(() => {
+  const fetchArt =async () => {
+    const fetchedarts = await getart(contactno);
+    setArtnoms(fetchedarts);
+  };
+  if(contactno){
+    fetchArt();
+  }
+},[contactno]);
+
+console.log(artnoms);
+
+console.log(contactno);
 
   return (
     
@@ -100,7 +128,8 @@ useEffect(() => {
           </select>
           </div>
           <div><label>CONT.NO</label>
-          <select className='md:w-24 ml-2 sm:w-12' >
+          <select className='md:w-24 ml-2 sm:w-12' onChange={(e) => setContractno(e.target.value
+            )} >
             {contracts.map(contract =>(
               <option key={contract.constractno} value={contract.constractno}>{contract.constractno}</option>
             ))}
@@ -108,7 +137,12 @@ useEffect(() => {
           </div>
         </div>
         <div className='w-full h-6 p-0 text-sm'>
-          <label className='mx-2'>ART NO</label><select className='md:w-80  ml-2 sm:w-48'></select>
+          <label className='mx-2'>ART NO</label>
+          <select className='md:w-80  ml-2 sm:w-48'>
+          {artnoms.map(artnom =>(
+            <option key={artnom.id}>{artnom.id}</option>
+          ))}
+          </select>
         </div>
       </div>
       <div className='w-full h-full flex flex-col'>
@@ -175,10 +209,28 @@ useEffect(() => {
             <div className='flex justify-between h-3 my-1'><label>PLM NO</label><input className='w-20'/></div>
           </div>
           <div className='flex flex-col md:mr-11'>
-            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL REF</label><input className='w-14 h-3' /></div>
-            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL TYPE</label><input className='w-14 h-3' /></div>
-            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL WIDTH</label><input className='w-14 h-3' /></div>
-            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>SCISSOR MARK</label><input className='w-14 h-3' /></div>
+            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL REF</label>
+            <select className='w-14 h-3'>
+              <option>TRL02</option>
+              <option>K8F/M12302</option>
+              <option>TCA40</option>
+              <option>F2 55</option>
+              <option>V1 45</option>
+              <option>BD</option>
+              <option>A112</option>
+            </select>
+            </div>
+            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL TYPE</label><select className='w-14 h-3'>
+              <option>T</option>
+              <option>K</option>
+              <option>C</option>
+              </select></div>
+            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL WIDTH</label>
+            <select className='w-14 h-3'>
+              <option>20</option>
+            </select>
+            </div>
+            <div className='h-3 mb-px flex justify-between ml-0.5 '><label>SCISSOR MARK</label><input className='w-14 h-3' /></div>
           </div>
         </div>
       </div>
@@ -189,7 +241,9 @@ useEffect(() => {
         <label className='mx-1'><input type="radio" className='mx-1'/>BOOKLET</label>
         <label className='mx-1'><input type="radio" className='mx-1'/>LOOPFOLD</label>
       </div>
-      <div className='w-full h-full flex justify-center items-center  text-6xl text-white'><p className='text-center'>ARTWORK PREVIEW</p></div>
+      <div className='w-full h-full flex justify-center items-center   text-white'>
+        {!show && <p className='text-center text-6xl'>ARTWORK PREVIEW</p>}
+        </div>
       <div className='w-full bg-sky-700 h-14 flex flex-row justify-center'>
         <div className='text-xs text-center flex flex-col  m-1 items-start overflow-hidden '>
           <div>COLOR</div>
