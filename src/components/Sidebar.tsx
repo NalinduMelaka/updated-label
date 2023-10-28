@@ -27,7 +27,7 @@ const routes = [
     label: 'Input data',
     icon: FileText,
     color: "text-pink-700",
-    href: '/iinputdata',
+    href: '/inputdata',
   },
   {
     label: 'Settings',

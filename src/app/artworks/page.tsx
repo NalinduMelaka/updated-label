@@ -42,7 +42,7 @@ const Page = (props: Props) => {
   const [strokeno, setStrokeno] = useState('');
   const [contactno, setContractno] = useState('');
   const [show, setShow] = useState(false);
-  const [artno, setArtno] = useState();
+  const [artno, setArtno] = useState('');
   console.log('stroke is running on artwork')
 
   const handleInputChange = async () => {
@@ -55,6 +55,10 @@ const Page = (props: Props) => {
    }
         
  };
+
+ const setshow = () => {
+  setShow(true);
+ }
 
  useEffect(() => {
   const fetchStroke = async () => {
@@ -89,6 +93,7 @@ useEffect(() => {
   const fetchArt =async () => {
     const fetchedarts = await getart(contactno);
     setArtnoms(fetchedarts);
+    setArtno(fetchedarts[0].id)
   };
   if(contactno){
     fetchArt();
@@ -96,7 +101,7 @@ useEffect(() => {
 },[contactno]);
 
 console.log(artnoms);
-
+console.log(artno);
 console.log(contactno);
 
   return (
@@ -138,7 +143,7 @@ console.log(contactno);
         </div>
         <div className='w-full h-6 p-0 text-sm'>
           <label className='mx-2'>ART NO</label>
-          <select className='md:w-80  ml-2 sm:w-48'>
+          <select className='md:w-80  ml-2 sm:w-48' onChange={(e) => setArtno(e.target.value)}>
           {artnoms.map(artnom =>(
             <option key={artnom.id}>{artnom.id}</option>
           ))}
@@ -150,7 +155,7 @@ console.log(contactno);
         <div className=' h-full grid grid-cols-2 grid-rows-3 text-xs'>
           <div className=' flex flex-col md:w-40 md:ml-10'>
             <div className='flex justify-between'><label>Dept.Na</label>
-            <select className='w-20 h-3 m-1'>
+            <select className='w-20 h-3 m-1 fontsms'>
               <option>T11</option>
               <option>T14</option>
               <option>T15</option>
@@ -164,7 +169,7 @@ console.log(contactno);
             </div>
             <div className='flex justify-between'><label>Sup.Code</label><input className='w-20 h-3 m-1' type='text'/></div>
             <div className='flex justify-between'><label>COO</label>
-            <select className='w-20 h-3 m-1'>
+            <select className='w-20 h-3 m-1 fontsms'>
               <option>BD</option>
             </select>
             </div>
@@ -177,7 +182,7 @@ console.log(contactno);
               </div>
               <div className='flex justify-between'>
                 <label>POS</label>
-                <select className='sm:w-20 w-24 m-1 h-3'>
+                <select className='sm:w-20 w-24 m-1 h-3 fontsms'>
                   <option>TOP</option>
                 </select>
               </div>
@@ -187,7 +192,7 @@ console.log(contactno);
               <div className='flex flex-row justify-between h-3'>
                 <div><label>P.D</label><input className='w-8  h-3 m-1'/></div>
                 <div><label>R.Color</label>
-                <select className='w-8 md:w-11 h-3  m-1'>
+                <select className='w-8 md:w-12 h-3  m-1 fontsms'>
                   <option>WHITE</option>
                 </select>
                 </div>
@@ -210,7 +215,7 @@ console.log(contactno);
           </div>
           <div className='flex flex-col md:mr-11'>
             <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL REF</label>
-            <select className='w-14 h-3'>
+            <select className='w-14 h-3 fontsms'>
               <option>TRL02</option>
               <option>K8F/M12302</option>
               <option>TCA40</option>
@@ -220,13 +225,13 @@ console.log(contactno);
               <option>A112</option>
             </select>
             </div>
-            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL TYPE</label><select className='w-14 h-3'>
+            <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL TYPE</label><select className='w-14 h-3 fontsms'>
               <option>T</option>
               <option>K</option>
               <option>C</option>
               </select></div>
             <div className='h-3 mb-px flex justify-between ml-0.5 md:my-0.5'><label>LABEL WIDTH</label>
-            <select className='w-14 h-3'>
+            <select className='w-14 h-3 fontsms'>
               <option>20</option>
             </select>
             </div>
@@ -243,6 +248,7 @@ console.log(contactno);
       </div>
       <div className='w-full h-full flex justify-center items-center   text-white'>
         {!show && <p className='text-center text-6xl'>ARTWORK PREVIEW</p>}
+        {show && <Showimg url={artno} />}
         </div>
       <div className='w-full bg-sky-700 h-14 flex flex-row justify-center'>
         <div className='text-xs text-center flex flex-col  m-1 items-start overflow-hidden '>
@@ -253,7 +259,7 @@ console.log(contactno);
         <div className='hover:bg-sky-500 text-xs text-center flex items-center p-1 text-white m-1 border border-white'>PREVIEW ARTWORK</div>
         <div className='hover:bg-sky-500 text-xs text-center flex items-center p-1 text-white m-1 border border-white'>ALL SIZES</div>
         <div className='hover:bg-sky-500 text-xs text-center flex items-center p-1 text-white m-1 border border-white'>UPLOAD</div>
-        <div className='hover:bg-sky-500 text-xs  flex items-center p-1 m-1 border justify-center border-white md:w-16 font-medium'>OPEN</div>
+        <button className='hover:bg-sky-500 text-xs  flex items-center p-1 m-1 border justify-center border-white md:w-16 font-medium' onClick={setshow}>OPEN</button>
       </div>
     </div>
     <div className=' flex flex-col border-8 border-gray-200 rounded-sm m-1 '>
